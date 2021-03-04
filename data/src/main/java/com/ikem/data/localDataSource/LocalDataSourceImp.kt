@@ -4,12 +4,12 @@ import com.ikem.data.localDataSource.dao.CardDao
 import com.ikem.data.localDataSource.entities.CardEntity
 import javax.inject.Inject
 
-class LocalDataSourceImp @Inject constructor(cardDao: CardDao) : LocalDataSource  {
+class LocalDataSourceImp @Inject constructor(val cardDao: CardDao) : LocalDataSource  {
     override suspend fun saveCard(cardEntity: CardEntity) {
-        TODO("Not yet implemented")
+        cardDao.saveCardInfo(cardEntity)
     }
 
     override suspend fun getCard(cardNumber: Int): CardEntity? {
-        TODO("Not yet implemented")
+       return cardDao.getCardInfo(cardNumber)
     }
 }

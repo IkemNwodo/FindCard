@@ -8,6 +8,7 @@ import com.ikem.data.remoteDataSource.RemoteDataSource
 import com.ikem.domain.Result
 import com.ikem.domain.entities.CardInfo
 import com.ikem.domain.repositories.CardRepository
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CardRepositoryImpl @Inject constructor(
@@ -15,9 +16,9 @@ class CardRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dispatchers: DispatcherProvider
 ) : CardRepository {
-    override suspend fun getCardInfo(cardNumber: Int): Result<CardInfo> {
+    override suspend fun getCardInfo(cardNumber: Int): Result<CardInfo> = withContext(dispatchers.io()) {
 
-        return when (val local = localDataSource.getCard(cardNumber)) {
+        return@withContext when (val local = localDataSource.getCard(cardNumber)) {
             null -> {
                 val cardResult = remoteDataSource.getCardInfo(cardNumber)
                 if (cardResult.isSuccessful) {

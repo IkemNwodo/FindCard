@@ -1,10 +1,12 @@
 package com.ikem.data.remoteDataSource
 
+import com.ikem.data.remoteDataSource.api.CardInfoService
 import com.ikem.data.remoteDataSource.responses.CardInfoResponse
 import retrofit2.Response
+import javax.inject.Inject
 
-class RemoteDataSourceImp : RemoteDataSource{
+class RemoteDataSourceImp @Inject constructor(val cardInfoService: CardInfoService) : RemoteDataSource{
     override suspend fun getCardInfo(cardNumber: Int): Response<CardInfoResponse> {
-        TODO("Not yet implemented")
+       return cardInfoService.getCardInfo(cardNumber)
     }
 }

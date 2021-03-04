@@ -5,6 +5,12 @@ import com.ikem.domain.entities.CardInfo
 
 class CardMapperLocalSource : BaseMapper<CardEntity, CardInfo> {
     override fun transform(type: CardEntity): CardInfo = CardInfo(
-        bank = type.bank?.name ?: "", brand = type.brand ?: "", country = type.country?.name ?: "", type = type.type ?: ""
+        bank = type.bank ?: "",
+        brand = type.brand ?: "",
+        country = type.country ?: "",
+        type = type.type ?: "",
+        scheme = type.scheme ?: "",
+        prepaid = type.prepaid ?: "",
+        length = type.length ?: ""
     )
 }

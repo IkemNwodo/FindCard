@@ -26,6 +26,8 @@ object Versions {
 
     val vector_drawable = "1.1.0"
 
+    val smooth_progress_bar = "1.1.0"
+
     val material_version = "1.2.1"
     val lifecycle_ext = "2.1.1"
     val room_version = "2.2.5"
@@ -56,6 +58,7 @@ object Deps {
     val viewmodel_ktx =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle_version}"
     val livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle_version}"
+    val smooth_progress_bar = "com.github.castorflex.smoothprogressbar:library:${Versions.smooth_progress_bar}"
 
     val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt_version}"
     val hilt_android_compiler = "com.google.dagger:hilt-android-compiler:${Versions.hilt_version}"
