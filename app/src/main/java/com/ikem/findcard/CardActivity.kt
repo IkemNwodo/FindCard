@@ -74,7 +74,10 @@ class CardActivity : AppCompatActivity() {
         }
 
         binding.cardNumberField.run {
-            doOnTextChanged { _, _, _, _, -> binding.cardNumberLayout.run { error = "" } }
+            doOnTextChanged { _, _, _, _, ->
+                binding.checkBtn.isEnabled = true
+                binding.cardNumberLayout.run { error = "" }
+            }
             doAfterTextChanged {
                 if (it != null) {
                     val text = removeWhiteSpaces(it.toString())
@@ -109,9 +112,6 @@ class CardActivity : AppCompatActivity() {
 
     private fun removeWhiteSpaces(input: String): String = input.replace("\\s".toRegex(), "")
 
-    private fun View.hideKeyboard() {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
-    }
+
 
 }
