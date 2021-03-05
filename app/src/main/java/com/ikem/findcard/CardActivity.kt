@@ -1,14 +1,14 @@
 package com.ikem.findcard
 
 import android.content.Context
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.ikem.findcard.databinding.ActivityCardBinding
@@ -26,58 +26,88 @@ class CardActivity : AppCompatActivity() {
         binding = ActivityCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.coordLayout.isVisible = false
         binding.fabClose.setOnClickListener {
-            binding.coordLayout.isVisible = false
+            with(binding) {
+                coordLayout.isVisible = false
+                errorText.isVisible = false
+                checkBtn.isEnabled = true
+                cardNumber.clearText()
+                cardBrand.clearText()
+                cardType.clearText()
+                cardBank.clearText()
+                cardCountry.clearText()
+                cardPrepaid.clearText()
+                cardScheme.clearText()
+                cardLength.clearText()
+            }
         }
 
         viewModel.cardInfo.observe(this, Observer { cardInfo ->
-            binding.coordLayout.isVisible = true
+            binding.progressView.isVisible = false
+
             if (cardInfo != null) {
-                with(binding){
+                with(binding) {
+                    coordLayout.isVisible = true
+                    cardNumber.getText(cardNumberField.text.toString())
                     cardBrand.getText(cardInfo.brand)
                     cardType.getText(cardInfo.type)
                     cardBank.getText(cardInfo.bank)
                     cardCountry.getText(cardInfo.country)
                     cardPrepaid.getText(cardInfo.prepaid)
                     cardScheme.getText(cardInfo.scheme)
+                    cardLength.getText(cardInfo.length)
+                    cardNumberField.setText("")
                 }
-            }
-            else
-                binding.errorText.isVisible = true
+            } else
+                Snackbar.make(
+                    binding.coordLayout, getString(R.string.snack_message),
+                    Snackbar.LENGTH_LONG
+                ).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+                    .show()
         })
 
         binding.checkBtn.setOnClickListener {
             it.isEnabled = false
+            binding.cardNumberField.clearFocus()
             it.hideKeyboard()
             getCard()
         }
 
+        binding.cardNumberField.run {
+            doOnTextChanged { _, _, _, _, -> binding.cardNumberLayout.run { error = "" } }
+            doAfterTextChanged {
+                if (it != null) {
+                    val text = removeWhiteSpaces(it.toString())
+                    if (text.length % 4 == 0)
+                        it.append(" ")
+                }
+            }
+        }
 
         viewModel.isSuccessful.observe(this, Observer { successful ->
             if (!successful) {
-                with(binding){
-                    include.progressView.isVisible = false
+                with(binding) {
+                    binding.progressView.isVisible = false
                     coordLayout.isVisible = true
                     errorText.isVisible = true
                 }
-                Snackbar.make(binding.coordLayout, getString(R.string.snack_message),
-                    Snackbar.LENGTH_LONG).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-                    .show()
             }
         })
     }
 
     private fun getCard() {
-        val cardNumber = binding.cardNumberField.text.toString()
-        if (cardNumber.isNotEmpty()){
-            binding.include.progressView.isVisible = true
+        val input = binding.cardNumberField.text.toString()
+        val cardNumber = removeWhiteSpaces(input)
+
+        if (cardNumber.isNotEmpty()) {
+            binding.progressView.isVisible = true
             viewModel.getCardNumber(cardNumber = cardNumber.toInt())
         } else {
             binding.cardNumberLayout.error = getString(R.string.input_error)
         }
-
     }
+
+    private fun removeWhiteSpaces(input: String): String = input.replace("\\s".toRegex(), "")
 
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

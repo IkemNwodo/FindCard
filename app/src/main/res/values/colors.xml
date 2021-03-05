@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="status_bar">#ad5389</color>
 
     <color name="primaryTextColor">#ffffff</color>
 </resources>
