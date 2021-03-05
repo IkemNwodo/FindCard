@@ -25,7 +25,7 @@ class CardRepositoryImpl @Inject constructor(
                     val remoteData = cardResult.body()
                     if (remoteData != null) {
                         val mapper = CardMapperRemoteSource()
-                        localDataSource.saveCard(mapper.mapToCardEntity(remoteData))
+                        localDataSource.saveCard(mapper.mapToCardEntity(remoteData, cardNumber))
                         Result.Success(mapper.transform(remoteData))
                     } else {
                         Result.Success(null)

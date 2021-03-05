@@ -15,7 +15,8 @@ class CardMapperRemoteSource : BaseMapper<CardInfoResponse, CardInfo> {
         length = type.number.length.toString()
     )
 
-    fun mapToCardEntity(type: CardInfoResponse): CardEntity = CardEntity(
+    fun mapToCardEntity(type: CardInfoResponse, id: Int): CardEntity = CardEntity(
+        id = id,
         bank = type.bank?.name,
         brand = type.brand,
         country = type.country?.name,
